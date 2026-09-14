@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Data Format Converter | Hermes Data Services</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f0f2f5;color:#333}
+.header{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:white;padding:20px 40px;display:flex;justify-content:space-between;align-items:center}
+.header h1{font-size:24px}
+.header nav a{color:white;text-decoration:none;margin-left:20px;opacity:0.9}
+.container{max-width:1000px;margin:30px auto;padding:0 20px}
+.card{background:white;border-radius:12px;padding:30px;box-shadow:0 2px 10px rgba(0,0,0,0.08)}
+.card h2{margin-bottom:20px;color:#444;font-size:20px}
+.form-group{margin-bottom:15px}
+.form-group label{display:block;margin-bottom:5px;font-weight:600;font-size:14px;color:#555}
+textarea{width:100%;padding:12px;border:1px solid #ddd;border-radius:6px;font-family:monospace;font-size:13px;min-height:200px;resize:vertical}
+textarea:focus{outline:none;border-color:#667eea}
+.btn{padding:12px 24px;border:none;border-radius:6px;font-size:15px;cursor:pointer;font-weight:600;margin-right:10px;margin-bottom:10px}
+.btn-primary{background:linear-gradient(135deg,#667eea,#764ba2);color:white}
+.btn-secondary{background:#e0e0e0;color:#555}
+.btn-success{background:#2ed573;color:white}
+.limit-badge{background:#ffa502;color:white;padding:4px 10px;border-radius:12px;font-size:11px;font-weight:bold;display:inline-block;margin-left:10px}
+.free-note{background:#fff3cd;border:1px solid #ffc107;padding:10px 15px;border-radius:6px;font-size:13px;margin-bottom:15px}
+.cta-banner{background:linear-gradient(135deg,#ff6b6b,#ee5a24);color:white;padding:15px 20px;border-radius:8px;margin-top:15px;text-align:center}
+.cta-banner a{color:white;font-weight:bold;text-decoration:underline}
+.format-tabs{display:flex;gap:0;margin-bottom:20px;border-bottom:2px solid #eee}
+.format-tab{padding:10px 20px;cursor:pointer;border-bottom:2px solid transparent;font-weight:600;color:#666}
+.format-tab.active{color:#667eea;border-bottom-color:#667eea}
+.output-area{background:#fafafa;border:1px solid #e0e0e0;border-radius:8px;padding:20px;min-height:200px;font-family:monospace;font-size:13px;white-space:pre-wrap;max-height:400px;overflow:auto;position:relative}
+.watermark{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-30deg);font-size:36px;color:rgba(255,0,0,0.06);font-weight:bold;pointer-events:none}
+.error{color:#e74c3c;background:#ffeaea;padding:10px;border-radius:6px;margin-top:10px}
+</style>
+</head>
+<body>
+<div class="header">
+<h1>🛠️ Hermes Free Tools</h1>
+<nav><a href="index.html">Home</a></div>
+</div>
+<div class="container">
+<div class="card">
+<h2>Data Format Converter <span class="limit-badge">FREE: 100 rows max</span></h2>
+<div class="free-note">✨ Free version: 100 rows max, no batch processing. <a href="#pricing">Upgrade to Pro</a> for unlimited rows, API access & scheduled conversions.</div>
+<div class="format-tabs">
+<div class="format-tab active" onclick="setMode('csv2json')">CSV → JSON</div>
+<div class="format-tab" onclick="setMode('json2csv')">JSON → CSV</div>
+<div class="format-tab" onclick="setMode('csv2xml')">CSV → XML</div>
+<div class="format-tab" onclick="setMode('json2xml')">JSON → XML</div>
+</div>
+<div class="form-group"><label>Input Data</label><textarea id="input" placeholder="Paste your data here..."></textarea></div>
+<div style="display:flex;gap:10px;flex-wrap:wrap">
+<button class="btn btn-primary" onclick="convert()">Convert</button>
+<button class="btn btn-success" onclick="downloadOutput()">📥 Download Result</button>
+<button class="btn btn-secondary" onclick="clearAll()">Clear</button>
+</div>
+<div class="form-group" style="margin-top:20px"><label>Output</label><div class="output-area" id="output"><div class="watermark">FREE VERSION</div><span style="color:#999">Converted output will appear here...</span></div></div>
+<div class="cta-banner">
+🚀 Need automated data pipelines? <a href="#pricing">Hire Hermes Data Services</a> for ETL workflows, API integrations & data warehousing!
+</div>
+</div>
+</div>
+<script>
+let mode = 'csv2json';
+function setMode(m) {
+  mode = m;
+  document.querySelectorAll('.format-tab').forEach(t => t.classList.remove('active'));
+  event.target.classList.add('active');
+}
+function parseCSV(text) {
+  const lines = text.trim().split('\n');
+  if (lines.length < 2) return [];
+  const headers = lines[0].split(',').map(h => h.trim().replace(/^"|"$/g, ''));
+  const rows = [];
+  for (let i = 1; i < lines.length && i <= 100; i++) {
+    const vals = lines[i].split(',').map(v => v.trim().replace(/^"|"$/g, ''));
+    const obj = {};
+    headers.forEach((h, j) => obj[h] = vals[j] || '');
+    rows.push(obj);
+  }
+  return rows;
+}
+function toCSV(arr) {
+  if (!arr.length) return '';
+  const headers = Object.keys(arr[0]);
+  const rows = arr.map(obj => headers.map(h => '"' + (obj[h] || '').replace(/"/g, '""') + '"').join(','));
+  return headers.join(',') + '\n' + rows.join('\n');
+}
+function toXML(arr) {
+  let xml = '<?xml version="1.0" encoding="UTF-8"?>\n<root>\n';
+  arr.forEach(obj => {
+    xml += '  <item>\n';
+    Object.entries(obj).forEach(([k, v]) => xml += `    <${k}>${String(v).replace(/[<>&]/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;'}[c]))}</${k}>\n`);
+    xml += '  </item>\n';
+  });
+  xml += '</root>';
+  return xml;
+}
+function convert() {
+  const input = document.getElementById('input').value.trim();
+  if (!input) { showError('Please enter some data to convert.'); return; }
+  try {
+    let result = '';
+    if (mode === 'csv2json') {
+      const arr = parseCSV(input);
+      result = JSON.stringify(arr, null, 2);
+    } else if (mode === 'json2csv') {
+      const arr = JSON.parse(input);
+      result = toCSV(Array.isArray(arr) ? arr : [arr]);
+    } else if (mode === 'csv2xml') {
+      const arr = parseCSV(input);
+      result = toXML(arr);
+    } else if (mode === 'json2xml') {
+      const arr = JSON.parse(input);
+      result = toXML(Array.isArray(arr) ? arr : [arr]);
+    }
+    document.getElementById('output').innerHTML = '<pre style="margin:0;white-space:pre-wrap">' + result.replace(/[<>&]/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;'}[c])) + '</pre><div class="watermark">FREE VERSION</div>';
+  } catch(e) {
+    showError('Conversion error: ' + e.message);
+  }
+}
+function showError(msg) {
+  document.getElementById('output').innerHTML = '<div class="error">' + msg + '</div>';
+}
+function downloadOutput() {
+  const text = document.getElementById('output').innerText.replace(/FREE VERSION/g, '');
+  const blob = new Blob([text], {type: 'text/plain'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'converted_output.' + (mode.includes('json') ? 'json' : mode.includes('xml') ? 'xml' : 'csv');
+  a.click();
+}
+function clearAll() {
+  document.getElementById('input').value = '';
+  document.getElementById('output').innerHTML = '<span style="color:#999">Converted output will appear here...</span><div class="watermark">FREE VERSION</div>';
+}
+</script>
+</body>
+</html>

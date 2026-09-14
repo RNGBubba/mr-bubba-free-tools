@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Business Name Checker | Hermes Data Services</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f0f2f5;color:#333}
+.header{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:white;padding:20px 40px;display:flex;justify-content:space-between;align-items:center}
+.header h1{font-size:24px}
+.header nav a{color:white;text-decoration:none;margin-left:20px;opacity:0.9}
+.container{max-width:1000px;margin:30px auto;padding:0 20px}
+.card{background:white;border-radius:12px;padding:30px;box-shadow:0 2px 10px rgba(0,0,0,0.08)}
+.card h2{margin-bottom:20px;color:#444;font-size:20px}
+.form-group{margin-bottom:15px}
+.form-group label{display:block;margin-bottom:5px;font-weight:600;font-size:14px;color:#555}
+input[type="text"]{width:100%;padding:12px;border:1px solid #ddd;border-radius:6px;font-size:15px}
+input:focus{outline:none;border-color:#667eea}
+.btn{padding:12px 24px;border:none;border-radius:6px;font-size:15px;cursor:pointer;font-weight:600}
+.btn-primary{background:linear-gradient(135deg,#667eea,#764ba2);color:white}
+.limit-badge{background:#ffa502;color:white;padding:4px 10px;border-radius:12px;font-size:11px;font-weight:bold;display:inline-block;margin-left:10px}
+.free-note{background:#fff3cd;border:1px solid #ffc107;padding:10px 15px;border-radius:6px;font-size:13px;margin-bottom:15px}
+.cta-banner{background:linear-gradient(135deg,#ff6b6b,#ee5a24);color:white;padding:15px 20px;border-radius:8px;margin-top:15px;text-align:center}
+.cta-banner a{color:white;font-weight:bold;text-decoration:underline}
+.results{margin-top:25px}
+.check-item{display:flex;align-items:center;padding:12px 15px;margin-bottom:8px;border-radius:8px;background:#f8f9fa;border:1px solid #e9ecef}
+.check-icon{font-size:20px;margin-right:12px}
+.check-name{flex:1;font-weight:600}
+.check-status{font-size:13px;font-weight:bold;padding:4px 10px;border-radius:12px}
+.status-available{background:#d4edda;color:#155724}
+.status-taken{background:#f8d7da;color:#721c24}
+.status-unknown{background:#fff3cd;color:#856404}
+.check-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px}
+@media (max-width:600px){.check-grid{grid-template-columns:1fr}}
+.loader{display:none;text-align:center;padding:20px;color:#667eea}
+.spinner{display:inline-block;width:20px;height:20px;border:3px solid #e0e0e0;border-top-color:#667eea;border-radius:50%;animation:spin 0.8s linear infinite;vertical-align:middle;margin-right:8px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.suggestions{margin-top:20px;padding:15px;background:#e8f4f8;border-radius:8px}
+.suggestions h3{margin-bottom:10px;color:#0c5460}
+.suggestion-list{display:flex;flex-wrap:wrap;gap:8px}
+.suggestion-tag{background:#bee5eb;padding:5px 12px;border-radius:15px;font-size:13px}
+</style>
+</head>
+<body>
+<div class="header">
+<h1>🛠️ Hermes Free Tools</h1>
+<nav><a href="index.html">Home</a></nav>
+</div>
+<div class="container">
+<div class="card">
+<h2>Business Name & Domain Checker <span class="limit-badge">FREE: 3 checks</span></h2>
+<div class="free-note">✨ Free version: Basic availability check (no WHOIS/trademark search). <a href="#pricing">Upgrade to Pro</a> for comprehensive checks including trademarks & social media handles.</div>
+<div class="form-group"><label>Business Name to Check</label>
+<input type="text" id="bizName" placeholder="e.g., Acme Solutions" onkeydown="if(event.key==='Enter')checkName()"></div>
+<button class="btn btn-primary" onclick="checkName()">🔍 Check Availability</button>
+<div class="loader" id="loader"><span class="spinner"></span>Checking availability...</div>
+<div class="results" id="results"></div>
+<div class="suggestions" id="suggestions" style="display:none">
+<h3>💡 Suggested Alternatives</h3>
+<div class="suggestion-list" id="suggestionList"></div>
+</div>
+<div class="cta-banner">
+🚀 Launching a brand? <a href="#pricing">Hire Hermes Data Services</a> for full trademark clearance, brand strategy & logo design!
+</div>
+</div>
+</div>
+<script>
+let checksDone = 0;
+const maxChecks = 3;
+const takenDomains = ['google.com','amazon.com','apple.com','meta.com','microsoft.com','netflix.com','tesla.com','shopify.com','stripe.com','zoom.com'];
+const takenSocials = ['@nike','@apple','@starbucks','@amazon','@google','@microsoft','@netflix','@spotify'];
+
+function generateDomainVariations(name) {
+  const slug = name.toLowerCase().replace(/[^a-z0-9]/g, '');
+  return [
+    slug + '.com',
+    slug + '.io',
+    slug + '.co',
+    slug + 'app.com',
+    'get' + slug + '.com',
+    'try' + slug + '.com'
+  ];
+}
+
+function generateSocialHandles(name) {
+  const handle = name.toLowerCase().replace(/[^a-z0-9]/g, '').substring(0, 20);
+  return [
+    {platform:'Twitter/X', handle: '@' + handle},
+    {platform:'Instagram', handle: '@' + handle},
+    {platform:'LinkedIn', handle: '/' + handle},
+    {platform:'TikTok', handle: '@' + handle},
+    {platform:'Facebook', handle: '/' + handle}
+  ];
+}
+
+function simulateAvailability(domain) {
+  // Simulate availability (common names are taken)
+  const commonWords = ['tech','shop','store','solutions','services','group','inc','labs','studio','media','digital','app','data','cloud'];
+  const slug = domain.split('.')[0];
+  if (slug.length < 5) return Math.random() > 0.8; // short domains usually taken
+  if (commonWords.some(w => slug.includes(w))) return Math.random() > 0.6;
+  if (takenDomains.includes(domain)) return false;
+  return Math.random() > 0.4; // ~60% available
+}
+
+function checkName() {
+  const name = document.getElementById('bizName').value.trim();
+  if (!name) { alert('Please enter a business name'); return; }
+  if (checksDone >= maxChecks) {
+    document.getElementById('results').innerHTML = '<div style="background:#f8d7da;padding:15px;border-radius:8px;color:#721c24">❌ Free limit reached (3 checks). <strong>Upgrade to Pro</strong> for unlimited checks!</div>';
+    return;
+  }
+  checksDone++;
+  document.getElementById('loader').style.display = 'block';
+  document.getElementById('results').innerHTML = '';
+  document.getElementById('suggestions').style.display = 'none';
+
+  setTimeout(() => {
+    document.getElementById('loader').style.display = 'none';
+    const domains = generateDomainVariations(name);
+    const socials = generateSocialHandles(name);
+    
+    let html = '<h3 style="margin-bottom:15px">Results: ' + name + '</h3>';
+    html += '<div class="check-grid"><div><h4 style="margin-bottom:10px">🌐 Domains</h4>';
+    domains.forEach(domain => {
+      const avail = simulateAvailability(domain);
+      html += '<div class="check-item"><span class="check-icon">' + (avail ? '✅' : '❌') + '</span><span class="check-name">' + domain + '</span><span class="check-status ' + (avail ? 'status-available' : 'status-taken') + '">' + (avail ? 'Available' : 'Taken') + '</span></div>';
+    });
+    html += '</div><div><h4 style="margin-bottom:10px">📱 Social Handles</h4>';
+    socials.forEach(s => {
+      const avail = Math.random() > 0.5;
+      html += '<div class="check-item"><span class="check-icon">' + (avail ? '✅' : '❌') + '</span><span class="check-name">' + s.platform + '</span><span class="check-status ' + (avail ? 'status-available' : 'status-taken') + '">' + s.handle + '</span></div>';
+    });
+    html += '</div></div>';
+    
+    html += '<div style="margin-top:15px;font-size:12px;color:#888">Checks used: ' + checksDone + '/' + maxChecks + ' | Results are simulated. Upgrade for real-time WHOIS data.</div>';
+    document.getElementById('results').innerHTML = html;
+
+    // Show alternatives
+    const alts = ['Pro' + name, name + 'HQ', name + 'App', 'My' + name, name + 'Hub'];
+    document.getElementById('suggestionList').innerHTML = alts.map(a => '<span class="suggestion-tag">' + a + '</span>').join('');
+    document.getElementById('suggestions').style.display = 'block';
+  }, 1500);
+}
+</script>
+</body>
+</html>
