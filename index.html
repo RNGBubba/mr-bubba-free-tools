@@ -3,114 +3,404 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Hermes Data Services - Free Tools</title>
+<title>Free Tools — Hermes Data Services</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f0f2f5;color:#333}
-.hero{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:white;padding:60px 40px;text-align:center}
-.hero h1{font-size:36px;margin-bottom:15px}
-.hero p{font-size:18px;opacity:0.9;max-width:600px;margin:0 auto 25px}
-.cta-btn{display:inline-block;background:white;color:#667eea;padding:14px 32px;border-radius:8px;font-weight:bold;text-decoration:none;font-size:16px;transition:transform 0.2s}
-.cta-btn:hover{transform:scale(1.05)}
-.container{max-width:1200px;margin:40px auto;padding:0 20px}
-.tools-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:25px;margin-top:30px}
-.tool-card{background:white;border-radius:12px;padding:30px;box-shadow:0 2px 10px rgba(0,0,0,0.08);transition:transform 0.2s;cursor:pointer;text-decoration;color:inherit;display:block}
-.tool-card:hover{transform:translateY(-3px);box-shadow:0 6px 20px rgba(0,0,0,0.12)}
-.tool-icon{font-size:40px;margin-bottom:15px}
-.tool-card h3{font-size:20px;margin-bottom:10px;color:#333}
-.tool-card p{color:#666;font-size:14px;margin-bottom:15px;line-height:1.5}
-.tool-tag{display:inline-block;background:#e8f4f8;color:#0c5460;padding:4px 10px;border-radius:12px;font-size:11px;font-weight:600}
-.tool-tag.paid{background:#ffeaa7;color:#6c5ce7}
-.features-section{background:white;border-radius:12px;padding:40px;margin-top:40px;box-shadow:0 2px 10px rgba(0,0,0,0.08)}
-.features-section h2{text-align:center;margin-bottom:30px;color:#444}
-.features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px}
-.feature{text-align:center;padding:20px}
-.feature-icon{font-size:32px;margin-bottom:10px}
-.feature h4{margin-bottom:8px;color:#333}
-.feature p{font-size:13px;color:#666}
-.cta-section{background:linear-gradient(135deg,#ff6b6b,#ee5a24);color:white;padding:50px 40px;text-align:center;border-radius:12px;margin-top:40px}
-.cta-section h2{font-size:28px;margin-bottom:10px}
-.cta-section p{font-size:16px;opacity:0.9;margin-bottom:20px}
-.cta-section .cta-btn{background:#333;color:white}
-.footer{text-align:center;padding:30px;color:#888;font-size:13px}
+:root {
+  --bg: #000000;
+  --surface: #0a0a0a;
+  --surface-2: #141414;
+  --border: #1f1f1f;
+  --text: #fafafa;
+  --text-2: #888888;
+  --text-3: #555555;
+  --accent: #3b82f6;
+  --green: #22c55e;
+  --max-width: 1200px;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+.mono { font-family: 'JetBrains Mono', monospace; }
+
+/* Sticky Banner */
+.store-banner {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  background: rgba(0,0,0,0.85);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  z-index: 100;
+  padding: 12px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+.store-banner-text {
+  font-size: 13px;
+  color: var(--text-2);
+  font-weight: 500;
+}
+.store-banner-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--text);
+  color: var(--bg);
+  padding: 6px 16px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+.store-banner-link:hover {
+  background: #e0e0e0;
+  transform: scale(1.02);
+}
+.store-banner-link svg {
+  width: 14px;
+  height: 14px;
+  transition: transform 0.2s;
+}
+.store-banner-link:hover svg {
+  transform: translateX(2px);
+}
+
+/* Hero */
+.hero {
+  padding: 160px 32px 100px;
+  max-width: var(--max-width);
+  margin: 0 auto;
+  text-align: center;
+}
+.hero-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: var(--text-3);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 24px;
+}
+.hero h1 {
+  font-size: clamp(40px, 6vw, 64px);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.04em;
+  margin-bottom: 24px;
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.hero-subtitle {
+  font-size: 18px;
+  color: var(--text-2);
+  max-width: 550px;
+  margin: 0 auto 40px;
+  line-height: 1.6;
+}
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 16px 32px;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s;
+  border: none;
+  cursor: pointer;
+}
+.btn-primary { background: var(--text); color: var(--bg); }
+.btn-primary:hover { background: #e0e0e0; transform: translateY(-2px); }
+.btn-secondary { background: transparent; color: var(--text); border: 1px solid var(--border); }
+.btn-secondary:hover { border-color: var(--text-2); transform: translateY(-2px); }
+
+/* Tools Grid */
+.container { max-width: var(--max-width); margin: 0 auto; padding: 0 32px 80px; }
+.section-header { text-align: center; margin-bottom: 60px; }
+.section-header h2 {
+  font-size: clamp(28px, 4vw, 40px);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  margin-bottom: 12px;
+}
+.section-header p { color: var(--text-2); font-size: 16px; }
+
+.tools-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+}
+.tool-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 32px;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  position: relative;
+  overflow: hidden;
+}
+.tool-card:hover {
+  border-color: var(--text-3);
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+}
+.tool-icon {
+  width: 48px;
+  height: 48px;
+  background: var(--surface-2);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+.tool-card h3 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 10px;
+  letter-spacing: -0.01em;
+}
+.tool-card p {
+  color: var(--text-2);
+  font-size: 14px;
+  line-height: 1.6;
+  margin-bottom: 16px;
+}
+.tool-tags { display: flex; gap: 8px; flex-wrap: wrap; }
+.tool-tag {
+  display: inline-block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 500;
+  padding: 4px 10px;
+  border-radius: 100px;
+  background: rgba(34, 197, 94, 0.1);
+  color: var(--green);
+  border: 1px solid rgba(34, 197, 94, 0.2);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.tool-tag.pro {
+  background: rgba(59, 130, 246, 0.1);
+  color: var(--accent);
+  border-color: rgba(59, 130, 246, 0.2);
+}
+
+/* Features */
+.features-section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 60px;
+  margin-top: 60px;
+}
+.features-section h2 {
+  text-align: center;
+  font-size: clamp(24px, 3vw, 32px);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: 48px;
+}
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 32px;
+}
+.feature { text-align: center; }
+.feature-icon {
+  width: 44px;
+  height: 44px;
+  background: var(--surface-2);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  margin: 0 auto 16px;
+}
+.feature h4 {
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+.feature p {
+  font-size: 13px;
+  color: var(--text-2);
+  line-height: 1.5;
+}
+
+/* CTA Section */
+.cta-section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 60px;
+  text-align: center;
+  margin-top: 60px;
+}
+.cta-section h2 {
+  font-size: clamp(24px, 3vw, 32px);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: 12px;
+}
+.cta-section p {
+  color: var(--text-2);
+  font-size: 16px;
+  margin-bottom: 32px;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Footer */
+.footer {
+  text-align: center;
+  padding: 40px 32px;
+  color: var(--text-3);
+  font-size: 13px;
+  border-top: 1px solid var(--border);
+  margin-top: 80px;
+}
+.footer a { color: var(--text-2); text-decoration: none; transition: color 0.2s; }
+.footer a:hover { color: var(--text); }
+
+@media (max-width: 768px) {
+  .hero { padding: 140px 24px 80px; }
+  .container { padding: 0 24px 60px; }
+  .features-section, .cta-section { padding: 40px 24px; }
+  .tools-grid { grid-template-columns: 1fr; }
+  .store-banner-text { font-size: 11px; }
+  .store-banner-link { font-size: 11px; padding: 5px 12px; }
+}
 </style>
 </head>
 <body>
+
+<!-- Sticky Banner -->
+<div class="store-banner">
+  <span class="store-banner-text">Need a professional version?</span>
+  <a href="https://rngbubba.github.io/hermes-store/" target="_blank" rel="noopener noreferrer" class="store-banner-link">
+    Hire us
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+  </a>
+</div>
+
+<!-- Hero -->
 <div class="hero">
-<h1>🛠️ Hermes Data Services</h1>
-<p>Free online tools to boost your productivity. Upgrade to our professional services for advanced features and custom solutions.</p>
-<a href="#tools" class="cta-btn">Explore Free Tools</a>
+  <div class="hero-label">Free Online Tools</div>
+  <h1>Tools that work in your browser</h1>
+  <p class="hero-subtitle">No signup, no installs. Run everything locally in your browser. Limited free versions — upgrade for unlimited power.</p>
+  <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap">
+    <a href="#tools" class="btn btn-primary">Explore Tools</a>
+    <a href="https://rngbubba.github.io/hermes-store/" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">Hire Us for Custom Work</a>
+  </div>
 </div>
 
+<!-- Tools Grid -->
 <div class="container">
-<h2 id="tools" style="text-align:center;margin-bottom:10px">Free Online Tools</h2>
-<p style="text-align:center;color:#666;margin-bottom:10px">Each tool works in your browser — no signup required. Limited features to encourage upgrading.</p>
+  <div class="section-header" id="tools">
+    <h2>Free Tools</h2>
+    <p>Each tool runs entirely in your browser — your data never leaves your device.</p>
+  </div>
 
-<div class="tools-grid">
-<a href="invoice.html" class="tool-card">
-<div class="tool-icon">🧾</div>
-<h3>Invoice Generator</h3>
-<p>Create professional invoices and download as PDF. Free version includes watermark and up to 3 line items.</p>
-<span class="tool-tag">FREE</span> <span class="tool-tag paid">PRO: Unlimited</span>
-</a>
+  <div class="tools-grid">
+    <a href="invoice.html" class="tool-card">
+      <div class="tool-icon">🧾</div>
+      <h3>Invoice Generator</h3>
+      <p>Create professional invoices and download as PDF. Free version includes watermark and up to 3 line items.</p>
+      <div class="tool-tags">
+        <span class="tool-tag">Free</span>
+        <span class="tool-tag pro">Pro: Unlimited</span>
+      </div>
+    </a>
 
-<a href="converter.html" class="tool-card">
-<div class="tool-icon">🔄</div>
-<h3>Data Format Converter</h3>
-<p>Convert between CSV, JSON, and XML formats instantly. Free version supports up to 100 rows.</p>
-<span class="tool-tag">FREE</span> <span class="tool-tag paid">PRO: Unlimited</span>
-</a>
+    <a href="converter.html" class="tool-card">
+      <div class="tool-icon">🔄</div>
+      <h3>Data Format Converter</h3>
+      <p>Convert between CSV, JSON, and XML formats instantly. Free version supports up to 100 rows.</p>
+      <div class="tool-tags">
+        <span class="tool-tag">Free</span>
+        <span class="tool-tag pro">Pro: Unlimited</span>
+      </div>
+    </a>
 
-<a href="checker.html" class="tool-card">
-<div class="tool-icon">🔍</div>
-<h3>Business Name Checker</h3>
-<p>Check domain and social media handle availability. Free version includes 3 checks with simulated data.</p>
-<span class="tool-tag">FREE</span> <span class="tool-tag paid">PRO: Real WHOIS</span>
-</a>
+    <a href="checker.html" class="tool-card">
+      <div class="tool-icon">🔍</div>
+      <h3>Business Name Checker</h3>
+      <p>Check domain and social media handle availability. Free version includes 3 checks with simulated data.</p>
+      <div class="tool-tags">
+        <span class="tool-tag">Free</span>
+        <span class="tool-tag pro">Pro: Real WHOIS</span>
+      </div>
+    </a>
 
-<a href="chart.html" class="tool-card">
-<div class="tool-icon">📊</div>
-<h3>Chart & Report Generator</h3>
-<p>Create basic charts and reports from your data. Free version supports 5 data points and basic chart types.</p>
-<span class="tool-tag">FREE</span> <span class="tool-tag paid">PRO: Dashboards</span>
-</a>
+    <a href="chart.html" class="tool-card">
+      <div class="tool-icon">📊</div>
+      <h3>Chart & Report Generator</h3>
+      <p>Create basic charts and reports from your data. Free version supports 5 data points and basic chart types.</p>
+      <div class="tool-tags">
+        <span class="tool-tag">Free</span>
+        <span class="tool-tag pro">Pro: Dashboards</span>
+      </div>
+    </a>
+  </div>
+
+  <!-- Features -->
+  <div class="features-section">
+    <h2>Why these tools?</h2>
+    <div class="features-grid">
+      <div class="feature">
+        <div class="feature-icon">⚡</div>
+        <h4>Lightning Fast</h4>
+        <p>All tools run locally — no server delays or waiting.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">🔒</div>
+        <h4>Privacy First</h4>
+        <p>Your data never leaves your device. Zero tracking.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">🚀</div>
+        <h4>Professional Services</h4>
+        <p>Need more power? We build custom solutions for your business.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">💬</div>
+        <h4>Human Support</h4>
+        <p>Talk to real experts, not chatbots. Email us anytime.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="cta-section">
+    <h2>Need professional data solutions?</h2>
+    <p>From automated ETL pipelines to custom dashboards, we deliver enterprise-grade results.</p>
+    <a href="mailto:mrbubba@agentmail.to?subject=Project%20Inquiry" class="btn btn-primary">📧 Hire Us for Custom Work</a>
+  </div>
 </div>
 
-<div class="features-section">
-<h2>Why Choose Hermes Data Services?</h2>
-<div class="features-grid">
-<div class="feature">
-<div class="feature-icon">⚡</div>
-<h4>Lightning Fast</h4>
-<p>All tools run locally in your browser — no server delays.</p>
-</div>
-<div class="feature">
-<div class="feature-icon">🔒</div>
-<h4>Privacy First</h4>
-<p>Your data never leaves your device. Zero tracking.</p>
-</div>
-<div class="feature">
-<div class="feature-icon">🚀</div>
-<h4>Professional Services</h4>
-<p>Need more power? We build custom solutions for your business.</p>
-</div>
-<div class="feature">
-<div class="feature-icon">💬</div>
-<h4>Human Support</h4>
-<p>Talk to real experts, not chatbots. Email us anytime.</p>
-</div>
-</div>
-</div>
-
-<div class="cta-section">
-<h2>Need Professional Data Solutions?</h2>
-<p>From automated ETL pipelines to custom dashboards, we deliver enterprise-grade results.</p>
-<a href="mailto:contact@hermesdata.services" class="cta-btn">📧 Hire Us for Custom Work</a>
-</div>
-</div>
-
+<!-- Footer -->
 <div class="footer">
-<p>© 2026 Hermes Data Services. All free tools are provided as-is. <a href="#" style="color:#667eea">Privacy Policy</a> · <a href="#" style="color:#667eea">Terms</a></p>
+  <p>© 2026 Hermes Data Services. All free tools provided as-is. <a href="#">Privacy Policy</a> · <a href="#">Terms</a></p>
 </div>
+
 </body>
 </html>

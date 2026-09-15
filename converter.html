@@ -3,69 +3,312 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Data Format Converter | Hermes Data Services</title>
+<title>Data Format Converter — Hermes Data Services</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f0f2f5;color:#333}
-.header{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:white;padding:20px 40px;display:flex;justify-content:space-between;align-items:center}
-.header h1{font-size:24px}
-.header nav a{color:white;text-decoration:none;margin-left:20px;opacity:0.9}
-.container{max-width:1000px;margin:30px auto;padding:0 20px}
-.card{background:white;border-radius:12px;padding:30px;box-shadow:0 2px 10px rgba(0,0,0,0.08)}
-.card h2{margin-bottom:20px;color:#444;font-size:20px}
-.form-group{margin-bottom:15px}
-.form-group label{display:block;margin-bottom:5px;font-weight:600;font-size:14px;color:#555}
-textarea{width:100%;padding:12px;border:1px solid #ddd;border-radius:6px;font-family:monospace;font-size:13px;min-height:200px;resize:vertical}
-textarea:focus{outline:none;border-color:#667eea}
-.btn{padding:12px 24px;border:none;border-radius:6px;font-size:15px;cursor:pointer;font-weight:600;margin-right:10px;margin-bottom:10px}
-.btn-primary{background:linear-gradient(135deg,#667eea,#764ba2);color:white}
-.btn-secondary{background:#e0e0e0;color:#555}
-.btn-success{background:#2ed573;color:white}
-.limit-badge{background:#ffa502;color:white;padding:4px 10px;border-radius:12px;font-size:11px;font-weight:bold;display:inline-block;margin-left:10px}
-.free-note{background:#fff3cd;border:1px solid #ffc107;padding:10px 15px;border-radius:6px;font-size:13px;margin-bottom:15px}
-.cta-banner{background:linear-gradient(135deg,#ff6b6b,#ee5a24);color:white;padding:15px 20px;border-radius:8px;margin-top:15px;text-align:center}
-.cta-banner a{color:white;font-weight:bold;text-decoration:underline}
-.format-tabs{display:flex;gap:0;margin-bottom:20px;border-bottom:2px solid #eee}
-.format-tab{padding:10px 20px;cursor:pointer;border-bottom:2px solid transparent;font-weight:600;color:#666}
-.format-tab.active{color:#667eea;border-bottom-color:#667eea}
-.output-area{background:#fafafa;border:1px solid #e0e0e0;border-radius:8px;padding:20px;min-height:200px;font-family:monospace;font-size:13px;white-space:pre-wrap;max-height:400px;overflow:auto;position:relative}
-.watermark{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-30deg);font-size:36px;color:rgba(255,0,0,0.06);font-weight:bold;pointer-events:none}
-.error{color:#e74c3c;background:#ffeaea;padding:10px;border-radius:6px;margin-top:10px}
+:root {
+  --bg: #000000;
+  --surface: #0a0a0a;
+  --surface-2: #141414;
+  --border: #1f1f1f;
+  --text: #fafafa;
+  --text-2: #888888;
+  --text-3: #555555;
+  --accent: #3b82f6;
+  --green: #22c55e;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+.mono { font-family: 'JetBrains Mono', monospace; }
+
+/* Sticky Banner */
+.store-banner {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  background: rgba(0,0,0,0.85);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  z-index: 100;
+  padding: 12px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+.store-banner-text {
+  font-size: 13px;
+  color: var(--text-2);
+  font-weight: 500;
+}
+.store-banner-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--text);
+  color: var(--bg);
+  padding: 6px 16px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+.store-banner-link:hover { background: #e0e0e0; transform: scale(1.02); }
+.store-banner-link svg { width: 14px; height: 14px; transition: transform 0.2s; }
+.store-banner-link:hover svg { transform: translateX(2px); }
+
+/* Header */
+.header {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 80px 24px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.header h1 {
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+.header nav a {
+  color: var(--text-2);
+  text-decoration: none;
+  margin-left: 24px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+.header nav a:hover { color: var(--text); }
+
+/* Container */
+.container {
+  max-width: 1000px;
+  margin: 30px auto;
+  padding: 0 32px;
+}
+
+/* Cards */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 32px;
+}
+.card h2 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 24px;
+  letter-spacing: -0.01em;
+}
+
+/* Forms */
+.form-group { margin-bottom: 16px; }
+.form-group label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 500;
+  font-size: 13px;
+  color: var(--text-2);
+}
+textarea {
+  width: 100%;
+  padding: 14px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: var(--text);
+  min-height: 200px;
+  resize: vertical;
+  transition: border-color 0.2s;
+}
+textarea:focus { outline: none; border-color: var(--accent); }
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  font-weight: 600;
+  font-family: 'Inter', sans-serif;
+  transition: all 0.2s;
+}
+.btn-primary { background: var(--text); color: var(--bg); }
+.btn-primary:hover { background: #e0e0e0; transform: translateY(-2px); }
+.btn-secondary {
+  background: var(--surface-2);
+  color: var(--text-2);
+  border: 1px solid var(--border);
+}
+.btn-secondary:hover { color: var(--text); border-color: var(--text-3); }
+.btn-success {
+  background: rgba(34, 197, 94, 0.15);
+  color: var(--green);
+  border: 1px solid rgba(34, 197, 94, 0.2);
+}
+.btn-success:hover { background: rgba(34, 197, 94, 0.25); }
+
+/* Limit badge */
+.limit-badge {
+  background: rgba(59, 130, 246, 0.15);
+  color: var(--accent);
+  padding: 4px 10px;
+  border-radius: 100px;
+  font-size: 10px;
+  font-weight: 600;
+  font-family: 'JetBrains Mono', monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  display: inline-block;
+  margin-left: 8px;
+}
+.free-note {
+  background: rgba(59, 130, 246, 0.08);
+  border: 1px solid rgba(59, 130, 246, 0.15);
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  color: var(--text-2);
+  margin-bottom: 20px;
+}
+.free-note a { color: var(--accent); font-weight: 500; }
+.cta-banner {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 16px 20px;
+  border-radius: 10px;
+  margin-top: 16px;
+  text-align: center;
+  font-size: 13px;
+}
+.cta-banner a {
+  color: var(--accent);
+  font-weight: 600;
+  text-decoration: none;
+}
+.cta-banner a:hover { text-decoration: underline; }
+
+/* Format tabs */
+.format-tabs {
+  display: flex;
+  gap: 0;
+  margin-bottom: 20px;
+  border-bottom: 1px solid var(--border);
+}
+.format-tab {
+  padding: 10px 20px;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--text-3);
+  transition: all 0.2s;
+}
+.format-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+.format-tab:hover { color: var(--text); }
+
+/* Output area */
+.output-area {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  min-height: 200px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  white-space: pre-wrap;
+  max-height: 400px;
+  overflow: auto;
+  position: relative;
+  color: var(--text);
+}
+.watermark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-30deg);
+  font-size: 32px;
+  color: rgba(255,255,255,0.03);
+  font-weight: 700;
+  pointer-events: none;
+}
+.error {
+  color: #ef4444;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 13px;
+}
+
+@media (max-width: 768px) {
+  .container { padding: 0 20px; }
+  .header { padding: 70px 20px 16px; }
+}
 </style>
 </head>
 <body>
+
+<!-- Sticky Banner -->
+<div class="store-banner">
+  <span class="store-banner-text">Need a professional version?</span>
+  <a href="https://rngbubba.github.io/hermes-store/" target="_blank" rel="noopener noreferrer" class="store-banner-link">
+    Hire us
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+  </a>
+</div>
+
 <div class="header">
-<h1>🛠️ Hermes Free Tools</h1>
-<nav><a href="index.html">Home</a></div>
+  <h1>🛠️ Hermes Free Tools</h1>
+  <nav><a href="index.html">Home</a></nav>
 </div>
+
 <div class="container">
-<div class="card">
-<h2>Data Format Converter <span class="limit-badge">FREE: 100 rows max</span></h2>
-<div class="free-note">✨ Free version: 100 rows max, no batch processing. <a href="#pricing">Upgrade to Pro</a> for unlimited rows, API access & scheduled conversions.</div>
-<div class="format-tabs">
-<div class="format-tab active" onclick="setMode('csv2json')">CSV → JSON</div>
-<div class="format-tab" onclick="setMode('json2csv')">JSON → CSV</div>
-<div class="format-tab" onclick="setMode('csv2xml')">CSV → XML</div>
-<div class="format-tab" onclick="setMode('json2xml')">JSON → XML</div>
+  <div class="card">
+    <h2>Data Format Converter <span class="limit-badge">FREE: 100 rows max</span></h2>
+    <div class="free-note">✨ Free version: 100 rows max, no batch processing. <a href="https://rngbubba.github.io/hermes-store/" target="_blank" rel="noopener noreferrer">Upgrade to Pro</a> for unlimited rows, API access & scheduled conversions.</div>
+    <div class="format-tabs">
+      <div class="format-tab active" onclick="setMode('csv2json',this)">CSV → JSON</div>
+      <div class="format-tab" onclick="setMode('json2csv',this)">JSON → CSV</div>
+      <div class="format-tab" onclick="setMode('csv2xml',this)">CSV → XML</div>
+      <div class="format-tab" onclick="setMode('json2xml',this)">JSON → XML</div>
+    </div>
+    <div class="form-group"><label>Input Data</label><textarea id="input" placeholder="Paste your data here..."></textarea></div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap">
+      <button class="btn btn-primary" onclick="convert()">Convert</button>
+      <button class="btn btn-success" onclick="downloadOutput()">📥 Download Result</button>
+      <button class="btn btn-secondary" onclick="clearAll()">Clear</button>
+    </div>
+    <div class="form-group" style="margin-top:20px"><label>Output</label><div class="output-area" id="output"><div class="watermark">FREE VERSION</div><span style="color:var(--text-3)">Converted output will appear here...</span></div></div>
+    <div class="cta-banner">
+      🚀 Need automated data pipelines? <a href="https://rngbubba.github.io/hermes-store/" target="_blank" rel="noopener noreferrer">Hire Hermes Data Services</a> for ETL workflows, API integrations & data warehousing!
+    </div>
+  </div>
 </div>
-<div class="form-group"><label>Input Data</label><textarea id="input" placeholder="Paste your data here..."></textarea></div>
-<div style="display:flex;gap:10px;flex-wrap:wrap">
-<button class="btn btn-primary" onclick="convert()">Convert</button>
-<button class="btn btn-success" onclick="downloadOutput()">📥 Download Result</button>
-<button class="btn btn-secondary" onclick="clearAll()">Clear</button>
-</div>
-<div class="form-group" style="margin-top:20px"><label>Output</label><div class="output-area" id="output"><div class="watermark">FREE VERSION</div><span style="color:#999">Converted output will appear here...</span></div></div>
-<div class="cta-banner">
-🚀 Need automated data pipelines? <a href="#pricing">Hire Hermes Data Services</a> for ETL workflows, API integrations & data warehousing!
-</div>
-</div>
-</div>
+
 <script>
 let mode = 'csv2json';
-function setMode(m) {
+function setMode(m, el) {
   mode = m;
   document.querySelectorAll('.format-tab').forEach(t => t.classList.remove('active'));
-  event.target.classList.add('active');
+  el.classList.add('active');
 }
 function parseCSV(text) {
   const lines = text.trim().split('\n');
@@ -96,6 +339,9 @@ function toXML(arr) {
   xml += '</root>';
   return xml;
 }
+function escapeHtml(str) {
+  return str.replace(/[<>&]/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;'}[c]));
+}
 function convert() {
   const input = document.getElementById('input').value.trim();
   if (!input) { showError('Please enter some data to convert.'); return; }
@@ -114,7 +360,7 @@ function convert() {
       const arr = JSON.parse(input);
       result = toXML(Array.isArray(arr) ? arr : [arr]);
     }
-    document.getElementById('output').innerHTML = '<pre style="margin:0;white-space:pre-wrap">' + result.replace(/[<>&]/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;'}[c])) + '</pre><div class="watermark">FREE VERSION</div>';
+    document.getElementById('output').innerHTML = '<pre style="margin:0;white-space:pre-wrap">' + escapeHtml(result) + '</pre><div class="watermark">FREE VERSION</div>';
   } catch(e) {
     showError('Conversion error: ' + e.message);
   }
@@ -132,7 +378,7 @@ function downloadOutput() {
 }
 function clearAll() {
   document.getElementById('input').value = '';
-  document.getElementById('output').innerHTML = '<span style="color:#999">Converted output will appear here...</span><div class="watermark">FREE VERSION</div>';
+  document.getElementById('output').innerHTML = '<span style="color:var(--text-3)">Converted output will appear here...</span><div class="watermark">FREE VERSION</div>';
 }
 </script>
 </body>

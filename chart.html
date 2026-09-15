@@ -3,91 +3,373 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Chart & Report Generator | Hermes Data Services</title>
+<title>Chart & Report Generator — Hermes Data Services</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f0f2f5;color:#333}
-.header{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:white;padding:20px 40px;display:flex;justify-content:space-between;align-items:center}
-.header h1{font-size:24px}
-.header nav a{color:white;text-decoration:none;margin-left:20px;opacity:0.9}
-.container{max-width:1200px;margin:30px auto;padding:0 20px;display:grid;grid-template-columns:1fr 1fr;gap:30px}
-.card{background:white;border-radius:12px;padding:30px;box-shadow:0 2px 10px rgba(0,0,0,0.08)}
-.card h2{margin-bottom:20px;color:#444;font-size:20px}
-.form-group{margin-bottom:15px}
-.form-group label{display:block;margin-bottom:5px;font-weight:600;font-size:14px;color:#555}
-input[type="text"],input[type="number"],select{width:100%;padding:10px 12px;border:1px solid #ddd;border-radius:6px;font-size:14px}
-input:focus,select:focus{outline:none;border-color:#667eea}
-.btn{padding:12px 24px;border:none;border-radius:6px;font-size:15px;cursor:pointer;font-weight:600;margin-right:10px;margin-bottom:10px}
-.btn-primary{background:linear-gradient(135deg,#667eea,#764ba2);color:white}
-.btn-secondary{background:#e0e0e0;color:#555}
-.btn-add{background:#2ed573;color:white;padding:8px 16px;font-size:13px}
-.btn-danger{background:#ff4757;color:white;padding:6px 12px;font-size:12px}
-.limit-badge{background:#ffa502;color:white;padding:4px 10px;border-radius:12px;font-size:11px;font-weight:bold;display:inline-block;margin-left:10px}
-.free-note{background:#fff3cd;border:1px solid #ffc107;padding:10px 15px;border-radius:6px;font-size:13px;margin-bottom:15px}
-.cta-banner{background:linear-gradient(135deg,#ff6b6b,#ee5a24);color:white;padding:15px 20px;border-radius:8px;margin-top:15px;text-align:center}
-.cta-banner a{color:white;font-weight:bold;text-decoration:underline}
-.data-rows{margin-bottom:15px}
-.data-row{display:grid;grid-template-columns:2fr 1fr auto;gap:8px;margin-bottom:8px;align-items:center}
-.data-row input{padding:8px;border:1px solid #ddd;border-radius:4px;font-size:13px}
-.chart-container{background:#fafafa;border:1px solid #e0e0e0;border-radius:8px;padding:20px;min-height:350px;position:relative;display:flex;align-items:center;justify-content:center}
-.watermark{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-30deg);font-size:36px;color:rgba(255,0,0,0.08);font-weight:bold;pointer-events:none}
-.report-title{text-align:center;font-size:18px;font-weight:bold;margin-bottom:5px;color:#333}
-.report-subtitle{text-align:center;font-size:12px;color:#666;margin-bottom:20px}
-.legend{display:flex;flex-wrap:wrap;gap:12px;margin-top:15px;justify-content:center}
-.legend-item{display:flex;align-items:center;gap:5px;font-size:12px}
-.legend-color{width:14px;height:14px;border-radius:3px}
-@media (max-width:768px){.container{grid-template-columns:1fr}}
+:root {
+  --bg: #000000;
+  --surface: #0a0a0a;
+  --surface-2: #141414;
+  --border: #1f1f1f;
+  --text: #fafafa;
+  --text-2: #888888;
+  --text-3: #555555;
+  --accent: #3b82f6;
+  --green: #22c55e;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+.mono { font-family: 'JetBrains Mono', monospace; }
+
+/* Sticky Banner */
+.store-banner {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  background: rgba(0,0,0,0.85);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  z-index: 100;
+  padding: 12px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+.store-banner-text {
+  font-size: 13px;
+  color: var(--text-2);
+  font-weight: 500;
+}
+.store-banner-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--text);
+  color: var(--bg);
+  padding: 6px 16px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+.store-banner-link:hover { background: #e0e0e0; transform: scale(1.02); }
+.store-banner-link svg { width: 14px; height: 14px; transition: transform 0.2s; }
+.store-banner-link:hover svg { transform: translateX(2px); }
+
+/* Header */
+.header {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 80px 24px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.header h1 {
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+.header nav a {
+  color: var(--text-2);
+  text-decoration: none;
+  margin-left: 24px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+.header nav a:hover { color: var(--text); }
+
+/* Container */
+.container {
+  max-width: 1200px;
+  margin: 30px auto;
+  padding: 0 32px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+}
+
+/* Cards */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 32px;
+}
+.card h2 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 24px;
+  letter-spacing: -0.01em;
+}
+
+/* Forms */
+.form-group { margin-bottom: 16px; }
+.form-group label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 500;
+  font-size: 13px;
+  color: var(--text-2);
+}
+input[type="text"],
+input[type="number"],
+select {
+  width: 100%;
+  padding: 10px 14px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 14px;
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
+  transition: border-color 0.2s;
+}
+input:focus, select:focus { outline: none; border-color: var(--accent); }
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  font-weight: 600;
+  font-family: 'Inter', sans-serif;
+  transition: all 0.2s;
+}
+.btn-primary { background: var(--text); color: var(--bg); }
+.btn-primary:hover { background: #e0e0e0; transform: translateY(-2px); }
+.btn-secondary {
+  background: var(--surface-2);
+  color: var(--text-2);
+  border: 1px solid var(--border);
+}
+.btn-secondary:hover { color: var(--text); border-color: var(--text-3); }
+.btn-add {
+  background: rgba(34, 197, 94, 0.15);
+  color: var(--green);
+  border: 1px solid rgba(34, 197, 94, 0.2);
+  padding: 8px 16px;
+  font-size: 12px;
+}
+.btn-add:hover { background: rgba(34, 197, 94, 0.25); }
+.btn-danger {
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  padding: 6px 12px;
+  font-size: 11px;
+}
+.btn-danger:hover { background: rgba(239, 68, 68, 0.25); }
+
+/* Limit badge */
+.limit-badge {
+  background: rgba(59, 130, 246, 0.15);
+  color: var(--accent);
+  padding: 4px 10px;
+  border-radius: 100px;
+  font-size: 10px;
+  font-weight: 600;
+  font-family: 'JetBrains Mono', monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  display: inline-block;
+  margin-left: 8px;
+}
+.free-note {
+  background: rgba(59, 130, 246, 0.08);
+  border: 1px solid rgba(59, 130, 246, 0.15);
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  color: var(--text-2);
+  margin-bottom: 20px;
+}
+.free-note a { color: var(--accent); font-weight: 500; }
+.cta-banner {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 16px 20px;
+  border-radius: 10px;
+  margin-top: 16px;
+  text-align: center;
+  font-size: 13px;
+}
+.cta-banner a {
+  color: var(--accent);
+  font-weight: 600;
+  text-decoration: none;
+}
+.cta-banner a:hover { text-decoration: underline; }
+
+/* Data rows */
+.data-rows { margin-bottom: 16px; }
+.data-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr auto;
+  gap: 8px;
+  margin-bottom: 8px;
+  align-items: center;
+}
+.data-row input {
+  padding: 8px 10px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+}
+.data-row input:focus { outline: none; border-color: var(--accent); }
+
+/* Chart container */
+.chart-container {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  min-height: 350px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.watermark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-30deg);
+  font-size: 32px;
+  color: rgba(255,255,255,0.03);
+  font-weight: 700;
+  pointer-events: none;
+}
+.report-title {
+  text-align: center;
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 4px;
+  color: var(--text);
+}
+.report-subtitle {
+  text-align: center;
+  font-size: 11px;
+  color: var(--text-3);
+  margin-bottom: 16px;
+  font-family: 'JetBrains Mono', monospace;
+}
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 16px;
+  justify-content: center;
+}
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: var(--text-2);
+  font-family: 'JetBrains Mono', monospace;
+}
+.legend-color {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+}
+
+@media (max-width: 768px) {
+  .container { grid-template-columns: 1fr; padding: 0 20px; }
+  .header { padding: 70px 20px 16px; }
+}
 </style>
 </head>
 <body>
+
+<!-- Sticky Banner -->
+<div class="store-banner">
+  <span class="store-banner-text">Need a professional version?</span>
+  <a href="https://rngbubba.github.io/hermes-store/" target="_blank" rel="noopener noreferrer" class="store-banner-link">
+    Hire us
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+  </a>
+</div>
+
 <div class="header">
-<h1>🛠️ Hermes Free Tools</h1>
-<nav><a href="index.html">Home</a></nav>
+  <h1>🛠️ Hermes Free Tools</h1>
+  <nav><a href="index.html">Home</a></nav>
 </div>
+
 <div class="container">
-<div class="card">
-<h2>Chart & Report Generator <span class="limit-badge">FREE: 5 data points</span></h2>
-<div class="free-note">✨ Free version: 5 data points max, basic charts only. <a href="#pricing">Upgrade to Pro</a> for unlimited data, interactive dashboards & PDF export.</div>
-<div class="form-group"><label>Report Title</label><input type="text" id="reportTitle" placeholder="Q3 Sales Report" value="My Report"></div>
-<div class="form-group"><label>Chart Type</label>
-<select id="chartType">
-<option value="bar">Bar Chart</option>
-<option value="pie">Pie Chart</option>
-<option value="line">Line Chart</option>
-<option value="doughnut">Doughnut Chart</option>
-</select></div>
-<div class="form-group"><label>Data Points (label + value)</label></div>
-<div class="data-rows" id="dataRows"></div>
-<button class="btn btn-add" id="addRowBtn" onclick="addRow()">+ Add Data Point</button>
-<div style="margin-top:15px">
-<button class="btn btn-primary" onclick="generateChart()">📊 Generate Chart</button>
-<button class="btn btn-secondary" onclick="exportImage()">📥 Download Image</button>
+  <div class="card">
+    <h2>Chart & Report Generator <span class="limit-badge">FREE: 5 data points</span></h2>
+    <div class="free-note">✨ Free version: 5 data points max, basic charts only. <a href="https://rngbubba.github.io/hermes-store/" target="_blank" rel="noopener noreferrer">Upgrade to Pro</a> for unlimited data, interactive dashboards & PDF export.</div>
+    <div class="form-group"><label>Report Title</label><input type="text" id="reportTitle" placeholder="Q3 Sales Report" value="My Report"></div>
+    <div class="form-group">
+      <label>Chart Type</label>
+      <select id="chartType">
+        <option value="bar">Bar Chart</option>
+        <option value="pie">Pie Chart</option>
+        <option value="line">Line Chart</option>
+        <option value="doughnut">Doughnut Chart</option>
+      </select>
+    </div>
+    <div class="form-group"><label>Data Points (label + value)</label></div>
+    <div class="data-rows" id="dataRows"></div>
+    <button class="btn btn-add" id="addRowBtn" onclick="addRow()">+ Add Data Point</button>
+    <div style="margin-top:16px">
+      <button class="btn btn-primary" onclick="generateChart()">📊 Generate Chart</button>
+      <button class="btn btn-secondary" onclick="exportImage()">📥 Download Image</button>
+    </div>
+    <div class="cta-banner">
+      🚀 Need real dashboards? <a href="https://rngbubba.github.io/hermes-store/" target="_blank" rel="noopener noreferrer">Hire Hermes Data Services</a> for live KPI dashboards, automated reports & data analytics!
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Chart Preview</h2>
+    <div class="chart-container" id="chartContainer">
+      <div class="watermark">FREE VERSION</div>
+      <div style="text-align:center;color:var(--text-3)">
+        <div style="font-size:48px;margin-bottom:10px">📊</div>
+        <div>Add data points and click Generate Chart</div>
+      </div>
+    </div>
+    <div class="legend" id="legend"></div>
+  </div>
 </div>
-<div class="cta-banner">
-🚀 Need real dashboards? <a href="#pricing">Hire Hermes Data Services</a> for live KPI dashboards, automated reports & data analytics!
-</div>
-</div>
-<div class="card">
-<h2>Chart Preview</h2>
-<div class="chart-container" id="chartContainer">
-<div class="watermark">FREE VERSION</div>
-<div style="text-align:center;color:#999"><div style="font-size:48px;margin-bottom:10px">📊</div><div>Add data points and click Generate Chart</div></div>
-</div>
-<div class="legend" id="legend"></div>
-</div>
-</div>
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script>
 let dataPoints = [{label:'',value:0}];
 let chartInstance = null;
 const maxPoints = 5;
+const colors = ['#3b82f6','#22c55e','#f59e0b','#ef4444','#8b5cf6'];
+
 function renderRows() {
   const list = document.getElementById('dataRows');
   list.innerHTML = dataPoints.map((dp, i) => '<div class="data-row">' +
     '<input placeholder="Label (e.g., January)" value="' + dp.label + '" onchange="dataPoints[' + i + '].label=this.value">' +
     '<input type="number" step="0.01" placeholder="Value" value="' + dp.value + '" onchange="dataPoints[' + i + '].value=parseFloat(this.value)||0">' +
     '<button class="btn btn-danger" onclick="removeRow(' + i + ')">✕</button></div>').join('');
-  document.getElementById('addRowBtn').style.display = dataPoints.length >= maxPoints ? 'none' : 'inline-block';
+  document.getElementById('addRowBtn').style.display = dataPoints.length >= maxPoints ? 'none' : 'inline-flex';
 }
 function addRow() { if(dataPoints.length < maxPoints) { dataPoints.push({label:'',value:0}); renderRows(); } }
 function removeRow(i) { if(dataPoints.length > 1) { dataPoints.splice(i,1); renderRows(); } }
@@ -101,7 +383,6 @@ function generateChart() {
   
   const labels = dataPoints.map(d => d.label || '—');
   const values = dataPoints.map(d => d.value);
-  const colors = ['#667eea','#764ba2','#ff6b6b','#ffa502','#2ed573'];
   const type = document.getElementById('chartType').value;
   
   if(chartInstance) chartInstance.destroy();
@@ -113,8 +394,8 @@ function generateChart() {
       datasets: [{
         label: document.getElementById('reportTitle').value,
         data: values,
-        backgroundColor: type === 'line' ? 'rgba(102,126,234,0.1)' : colors.slice(0, values.length),
-        borderColor: type === 'line' ? '#667eea' : (type === 'pie' || type === 'doughnut' ? '#fff' : colors.slice(0, values.length)),
+        backgroundColor: type === 'line' ? 'rgba(59,130,246,0.1)' : colors.slice(0, values.length),
+        borderColor: type === 'line' ? '#3b82f6' : (type === 'pie' || type === 'doughnut' ? '#0a0a0a' : colors.slice(0, values.length)),
         borderWidth: type === 'line' ? 3 : 2,
         fill: type === 'line',
         tension: 0.4
@@ -123,16 +404,16 @@ function generateChart() {
     options: {
       responsive: false,
       plugins: {
-        title: { display: true, text: document.getElementById('reportTitle').value, font: { size: 16 } },
-        legend: { display: type === 'pie' || type === 'doughnut' }
+        title: { display: true, text: document.getElementById('reportTitle').value, font: { size: 16, family: 'Inter' }, color: '#fafafa' },
+        legend: { display: type === 'pie' || type === 'doughnut', labels: { color: '#888888', font: { family: 'Inter', size: 11 } } }
       },
       scales: type === 'pie' || type === 'doughnut' ? {} : {
-        y: { beginAtZero: true }
+        y: { beginAtZero: true, ticks: { color: '#888888', font: { family: 'JetBrains Mono', size: 10 } }, grid: { color: '#1f1f1f' } },
+        x: { ticks: { color: '#888888', font: { family: 'Inter', size: 11 } }, grid: { color: '#1f1f1f' } }
       }
     }
   });
   
-  // Update legend
   const legend = document.getElementById('legend');
   legend.innerHTML = labels.map((l, i) => '<div class="legend-item"><div class="legend-color" style="background:' + colors[i % 5] + '"></div>' + l + ': ' + values[i] + '</div>').join('');
 }
