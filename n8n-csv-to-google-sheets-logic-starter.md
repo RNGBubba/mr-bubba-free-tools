@@ -4,6 +4,12 @@ A credential-free starter for a common workflow: receive rows, normalize values,
 
 This is a **logic reference**, not a drop-in connection to anyone's Google account. It does not contain credentials, contact data, or a live API connection.
 
+A matching importable, credential-free starter workflow is available here:
+
+https://github.com/RNGBubba/mr-bubba-free-tools/blob/main/n8n-csv-to-google-sheets-starter.json
+
+This workflow normalizes sample rows and classifies them for a later destination lookup. Add your own CSV parser and Google Sheets nodes after reviewing the rules; do not paste credentials into the file.
+
 ## Suggested flow
 
 ```text

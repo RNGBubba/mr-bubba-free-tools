@@ -1,0 +1,46 @@
+{
+  "name": "CSV to Google Sheets - Logic Starter",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "4f4c8c0d-3d45-4d52-9fd8-6a9ebf4f0a01",
+      "name": "When clicking Execute",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [240, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "const input = $input.all().map((item) => item.json);\nconst rows = input.length ? input : [\n  { record_id: 'A-001', customer_name: 'Example One', total: '12.50', observed_at: '2026-09-15' },\n  { record_id: 'A-002', customer_name: 'Example Two', total: '8.00', observed_at: '2026-09-15' }\n];\n\nconst seen = new Set();\nreturn rows.map((row, index) => {\n  const recordId = String(row.record_id ?? '').trim();\n  const duplicate = !recordId || seen.has(recordId);\n  if (recordId) seen.add(recordId);\n  return {\n    json: {\n      ...row,\n      record_id: recordId,\n      total: row.total === '' || row.total == null ? null : Number(row.total),\n      import_action: duplicate ? 'review' : 'candidate',\n      import_reason: !recordId ? 'missing stable record_id' : duplicate ? 'duplicate record_id in input' : 'ready for destination lookup',\n      source_row: index + 1\n    }\n  };\n});"
+      },
+      "id": "aaf3ec2d-92fb-43ac-a3ed-0e91f2d7c3c8",
+      "name": "Normalize and classify rows",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [500, 300]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking Execute": {
+      "main": [
+        [
+          {
+            "node": "Normalize and classify rows",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "0b28d4f0-2dc8-4e06-87d4-c0f139f79346",
+  "meta": {
+    "templateCredsSetupCompleted": false
+  },
+  "tags": []
+}
