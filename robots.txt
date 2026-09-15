@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://rngbubba.github.io/mr-bubba-free-tools/sitemap.xml
